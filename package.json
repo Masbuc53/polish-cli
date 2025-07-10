@@ -44,12 +44,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yourusername/polish.git"
+    "url": "git+https://github.com/Masbuc53/polish-cli.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/polish/issues"
+    "url": "https://github.com/Masbuc53/polish-cli/issues"
   },
-  "homepage": "https://github.com/yourusername/polish#readme",
+  "homepage": "https://github.com/Masbuc53/polish-cli#readme",
   "engines": {
     "node": ">=18.0.0"
   },

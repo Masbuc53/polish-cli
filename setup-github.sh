@@ -3,8 +3,8 @@
 # GitHub Repository Setup Script for Polish
 # Replace YOUR_GITHUB_USERNAME with your actual GitHub username
 
-GITHUB_USERNAME="your-username"
-REPO_NAME="polish-obsidian"
+GITHUB_USERNAME="Masbuc53"
+REPO_NAME="polish-cli"
 
 echo "🚀 Setting up GitHub repository for Polish..."
 

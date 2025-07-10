@@ -10,7 +10,7 @@ By participating in this project, you agree to abide by our Code of Conduct. Ple
 
 ### Reporting Bugs
 
-1. Check if the bug has already been reported in [Issues](https://github.com/user/polish/issues)
+1. Check if the bug has already been reported in [Issues](https://github.com/Masbuc53/polish-cli/issues)
 2. If not, create a new issue using the bug report template
 3. Include detailed reproduction steps and environment information
 4. Add relevant logs with `POLISH_LOG_LEVEL=debug`
@@ -44,7 +44,7 @@ By participating in this project, you agree to abide by our Code of Conduct. Ple
 
 ```bash
 # Clone your fork
-git clone https://github.com/your-username/polish.git
+git clone https://github.com/Masbuc53/polish-cli.git
 cd polish
 
 # Install dependencies
@@ -209,8 +209,8 @@ examples/          # Usage examples
 ## Getting Help
 
 - Check the [documentation](docs/)
-- Search existing [issues](https://github.com/user/polish/issues)
-- Ask questions in [discussions](https://github.com/user/polish/discussions)
+- Search existing [issues](https://github.com/Masbuc53/polish-cli/issues)
+- Ask questions in [discussions](https://github.com/Masbuc53/polish-cli/discussions)
 - Join our community chat (if available)
 
 ## Recognition

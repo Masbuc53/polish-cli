@@ -240,5 +240,5 @@ MIT License - see [LICENSE](LICENSE) for details.
 ## Support
 
 - 📖 [Documentation](docs/)
-- 🐛 [Issues](https://github.com/username/polish/issues)
-- 💬 [Discussions](https://github.com/username/polish/discussions)
+- 🐛 [Issues](https://github.com/Masbuc53/polish-cli/issues)
+- 💬 [Discussions](https://github.com/Masbuc53/polish-cli/discussions)
