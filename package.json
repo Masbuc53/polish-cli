@@ -1,5 +1,5 @@
 {
-  "name": "polish-obsidian",
+  "name": "polish-cli",
   "version": "0.1.0",
   "description": "AI-powered file organization for Obsidian with automatic markdown conversion",
   "type": "module",

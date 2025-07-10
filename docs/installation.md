@@ -23,13 +23,13 @@ npm --version   # Should be 8.0.0 or higher
 ### Option 1: Global Installation (Recommended)
 
 ```bash
-npm install -g polish-obsidian
+npm install -g polish-cli
 ```
 
 **Benefits:**
 - Available from anywhere in your terminal
 - Simplest to use
-- Automatic updates with `npm update -g polish-obsidian`
+- Automatic updates with `npm update -g polish-cli`
 
 ### Option 2: Local Installation
 
@@ -39,7 +39,7 @@ mkdir ~/polish-app
 cd ~/polish-app
 
 # Install locally
-npm install polish-obsidian
+npm install polish-cli
 
 # Run using npx
 npx polish --version
@@ -126,7 +126,7 @@ polish organize ~/Desktop --dry-run
 brew install node
 
 # Install Polish
-npm install -g polish-obsidian
+npm install -g polish-cli
 ```
 
 **Permissions:**
@@ -141,7 +141,7 @@ curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
 sudo apt-get install -y nodejs
 
 # Install Polish
-npm install -g polish-obsidian
+npm install -g polish-cli
 ```
 
 **CentOS/RHEL:**
@@ -151,7 +151,7 @@ curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
 sudo yum install -y nodejs
 
 # Install Polish
-npm install -g polish-obsidian
+npm install -g polish-cli
 ```
 
 ### Windows
@@ -160,7 +160,7 @@ npm install -g polish-obsidian
 1. Download Node.js from [nodejs.org](https://nodejs.org/)
 2. Run the installer
 3. Open Command Prompt or PowerShell
-4. Install Polish: `npm install -g polish-obsidian`
+4. Install Polish: `npm install -g polish-cli`
 
 **Using Chocolatey:**
 ```powershell
@@ -168,7 +168,7 @@ npm install -g polish-obsidian
 choco install nodejs
 
 # Install Polish
-npm install -g polish-obsidian
+npm install -g polish-cli
 ```
 
 ## Configuration
@@ -213,7 +213,7 @@ alias personal='polish profile switch personal'
 # If npm install fails with permission errors
 npm config set prefix '~/.npm-global'
 export PATH=~/.npm-global/bin:$PATH
-npm install -g polish-obsidian
+npm install -g polish-cli
 ```
 
 **Node.js Version Issues:**
@@ -230,7 +230,7 @@ nvm use 18
 npm cache clean --force
 
 # Try with different registry
-npm install -g polish-obsidian --registry https://registry.npmjs.org/
+npm install -g polish-cli --registry https://registry.npmjs.org/
 ```
 
 ### Verification Commands
@@ -240,7 +240,7 @@ npm install -g polish-obsidian --registry https://registry.npmjs.org/
 which polish
 
 # Check package info
-npm list -g polish-obsidian
+npm list -g polish-cli
 
 # Check dependencies
 polish --version --verbose
@@ -252,27 +252,27 @@ polish --version --verbose
 
 ```bash
 # Update to latest version
-npm update -g polish-obsidian
+npm update -g polish-cli
 
 # Check for updates
-npm outdated -g polish-obsidian
+npm outdated -g polish-cli
 ```
 
 ### Manual Updates
 
 ```bash
 # Uninstall current version
-npm uninstall -g polish-obsidian
+npm uninstall -g polish-cli
 
 # Install latest version
-npm install -g polish-obsidian
+npm install -g polish-cli
 ```
 
 ## Uninstalling
 
 ```bash
 # Remove Polish globally
-npm uninstall -g polish-obsidian
+npm uninstall -g polish-cli
 
 # Remove configuration (optional)
 rm -rf ~/.polish

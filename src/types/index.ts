@@ -86,7 +86,7 @@ export interface Frontmatter {
   created: string;
   processed: string;
   tags: string[];
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface OrganizationResult {

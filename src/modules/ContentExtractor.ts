@@ -67,6 +67,7 @@ export class ContentExtractor {
 
   private isTextContent(content: string): boolean {
     // Simple heuristic: check for non-printable characters
+    // eslint-disable-next-line no-control-regex
     const nonPrintable = content.match(/[\x00-\x08\x0B-\x0C\x0E-\x1F]/g);
     return !nonPrintable || nonPrintable.length < content.length * 0.1;
   }

@@ -19,7 +19,7 @@ Polish creates a dual-organization system that converts all your files into tagg
 ### Installation
 
 ```bash
-npm install -g polish-obsidian
+npm install -g polish-cli
 ```
 
 ### Setup
@@ -189,7 +189,7 @@ polish list-supported          # Show supported file types
 ## Programmatic Usage
 
 ```typescript
-import { Polish, ProfileManager } from 'polish-obsidian';
+import { Polish, ProfileManager } from 'polish-cli';
 
 // Using profiles
 const profileManager = new ProfileManager();

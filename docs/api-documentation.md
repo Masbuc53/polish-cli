@@ -9,7 +9,7 @@ Polish provides a JavaScript/TypeScript API that allows you to integrate file or
 ## Installation
 
 ```bash
-npm install polish-obsidian
+npm install polish-cli
 ```
 
 ## Core Classes
@@ -19,7 +19,7 @@ npm install polish-obsidian
 The main class for file organization operations.
 
 ```typescript
-import { Polish } from 'polish-obsidian';
+import { Polish } from 'polish-cli';
 
 // Create instance with default configuration
 const polish = new Polish();
@@ -100,7 +100,7 @@ const result = await polish.analyze({
 Manages multiple profiles and configurations.
 
 ```typescript
-import { ProfileManager } from 'polish-obsidian';
+import { ProfileManager } from 'polish-cli';
 
 const profileManager = new ProfileManager();
 await profileManager.initialize();
@@ -245,7 +245,7 @@ interface ApiConfig {
 ### Basic File Organization
 
 ```typescript
-import { Polish } from 'polish-obsidian';
+import { Polish } from 'polish-cli';
 
 async function organizeFiles() {
   const polish = new Polish();
@@ -266,7 +266,7 @@ async function organizeFiles() {
 ### Custom Configuration
 
 ```typescript
-import { Polish } from 'polish-obsidian';
+import { Polish } from 'polish-cli';
 
 async function organizeWithCustomConfig() {
   const config = {
@@ -321,7 +321,7 @@ async function organizeWithCustomConfig() {
 ### Profile Management
 
 ```typescript
-import { ProfileManager } from 'polish-obsidian';
+import { ProfileManager } from 'polish-cli';
 
 async function manageProfiles() {
   const profileManager = new ProfileManager();
@@ -358,7 +358,7 @@ async function manageProfiles() {
 ### Error Handling
 
 ```typescript
-import { Polish, PolishError } from 'polish-obsidian';
+import { Polish, PolishError } from 'polish-cli';
 
 async function organizeWithErrorHandling() {
   try {
@@ -392,7 +392,7 @@ async function organizeWithErrorHandling() {
 ### Progress Tracking
 
 ```typescript
-import { Polish } from 'polish-obsidian';
+import { Polish } from 'polish-cli';
 
 async function organizeWithProgress() {
   const polish = new Polish();
@@ -420,7 +420,7 @@ async function organizeWithProgress() {
 ### Batch Processing
 
 ```typescript
-import { Polish } from 'polish-obsidian';
+import { Polish } from 'polish-cli';
 
 async function batchProcess() {
   const polish = new Polish();
@@ -455,7 +455,7 @@ async function batchProcess() {
 Polish emits events during processing that you can listen to:
 
 ```typescript
-import { Polish } from 'polish-obsidian';
+import { Polish } from 'polish-cli';
 
 async function organizeWithEvents() {
   const polish = new Polish();
@@ -486,7 +486,7 @@ async function organizeWithEvents() {
 When testing applications that use Polish:
 
 ```typescript
-import { Polish } from 'polish-obsidian';
+import { Polish } from 'polish-cli';
 
 // Mock Polish for testing
 jest.mock('polish-obsidian', () => ({
@@ -522,7 +522,7 @@ import {
   OrganizeResult,
   Profile,
   ProcessedFile 
-} from 'polish-obsidian';
+} from 'polish-cli';
 ```
 
 ## Next Steps

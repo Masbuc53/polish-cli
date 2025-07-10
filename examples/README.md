@@ -16,7 +16,7 @@ This directory contains practical examples and use cases for Polish, demonstrati
 
 ```bash
 # Install Polish globally
-npm install -g polish-obsidian
+npm install -g polish-cli
 
 # Create your first profile
 polish profile create personal

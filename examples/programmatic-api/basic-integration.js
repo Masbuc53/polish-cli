@@ -5,7 +5,7 @@
  * Demonstrates programmatic file organization
  */
 
-import { Polish, ProfileManager } from 'polish-obsidian';
+import { Polish, ProfileManager } from 'polish-cli';
 import path from 'path';
 import { fileURLToPath } from 'url';
 

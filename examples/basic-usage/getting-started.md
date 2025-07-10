@@ -10,7 +10,7 @@ This guide walks you through your first Polish setup and file organization.
 ## Installation
 
 ```bash
-npm install -g polish-obsidian
+npm install -g polish-cli
 ```
 
 ## First-Time Setup
