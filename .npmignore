@@ -3,12 +3,17 @@ src/
 tests/
 scripts/
 
+# Test files in build output
+dist/**/__tests__/
+dist/**/*.test.*
+dist/**/*.spec.*
+
 # Development files
 .github/
 .pre-commit-config.yaml
 jest.config.cjs
 tsconfig.json
-.eslintrc.js
+.eslintrc.cjs
 
 # Build artifacts
 coverage/
