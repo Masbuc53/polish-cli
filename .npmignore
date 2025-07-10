@@ -1,0 +1,49 @@
+# Source files
+src/
+tests/
+scripts/
+
+# Development files
+.github/
+.pre-commit-config.yaml
+jest.config.cjs
+tsconfig.json
+.eslintrc.js
+
+# Build artifacts
+coverage/
+*.tsbuildinfo
+
+# Development dependencies
+node_modules/
+
+# Environment files
+.env
+.env.*
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Documentation (keep README.md)
+docs/
+CONTRIBUTING.md
+SPECIFICATION.md
+
+# Examples (optional, might want to include)
+examples/
