@@ -64,13 +64,15 @@
     "mammoth": "^1.6.0",
     "ora": "^8.0.1",
     "pdf-parse": "^1.1.1",
-    "sharp": "^0.33.2"
+    "sharp": "^0.33.2",
+    "unzipper": "^0.10.14"
   },
   "devDependencies": {
     "@types/inquirer": "^9.0.7",
     "@types/jest": "^29.5.11",
     "@types/node": "^20.11.5",
     "@types/pdf-parse": "^1.1.4",
+    "@types/unzipper": "^0.10.7",
     "@typescript-eslint/eslint-plugin": "^6.19.0",
     "@typescript-eslint/parser": "^6.19.0",
     "eslint": "^8.56.0",

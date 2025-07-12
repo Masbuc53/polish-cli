@@ -1,56 +1,164 @@
 import chalk from 'chalk';
 import inquirer from 'inquirer';
-import { ConfigService } from '../../services/ConfigService.js';
+import { ProfileManager } from '../../services/ProfileManager.js';
 import { Config } from '../../types/index.js';
 import * as path from 'path';
 import * as os from 'os';
 
-interface ConfigOptions {
-  set?: string[];
-  get?: string;
-  show?: boolean;
-  init?: boolean;
-}
+export async function configCommand(action: string, key?: string, value?: string) {
+  const profileManager = new ProfileManager();
+  await profileManager.initialize();
 
-export async function configCommand(options: ConfigOptions) {
-  const configService = new ConfigService();
+  try {
+    switch (action) {
+      case 'init':
+        await initializeConfig(profileManager);
+        break;
 
-  if (options.init) {
-    await initializeConfig(configService);
-    return;
-  }
+      case 'show':
+        await showConfig(profileManager);
+        break;
 
-  if (options.show) {
-    const config = await configService.load();
-    console.log(chalk.bold('\nCurrent Configuration:\n'));
-    console.log(JSON.stringify(config, null, 2));
-    return;
-  }
+      case 'get':
+        if (!key) {
+          console.log(chalk.red('Error: Key is required for get command'));
+          console.log(chalk.gray('Usage: polish config get <key>'));
+          return;
+        }
+        await getConfigValue(profileManager, key);
+        break;
 
-  if (options.get) {
-    const config = await configService.load();
-    const value = getNestedValue(config, options.get);
-    if (value !== undefined) {
-      console.log(chalk.green(`${options.get}:`), value);
-    } else {
-      console.log(chalk.red(`Configuration key not found: ${options.get}`));
+      case 'set':
+        if (!key || !value) {
+          console.log(chalk.red('Error: Key and value are required for set command'));
+          console.log(chalk.gray('Usage: polish config set <key> <value>'));
+          return;
+        }
+        await setConfigValue(profileManager, key, value);
+        break;
+
+      case 'edit':
+        await editConfig(profileManager);
+        break;
+
+      default:
+        console.log(chalk.yellow('Unknown config action. Available actions:'));
+        console.log(chalk.gray('  show   - Show full configuration'));
+        console.log(chalk.gray('  get    - Get configuration value'));
+        console.log(chalk.gray('  set    - Set configuration value'));
+        console.log(chalk.gray('  init   - Initialize configuration'));
+        console.log(chalk.gray('  edit   - Edit configuration interactively'));
     }
-    return;
+  } catch (error) {
+    console.error(chalk.red('Config command failed:'), error instanceof Error ? error.message : error);
+    process.exit(1);
   }
-
-  if (options.set && options.set.length === 2) {
-    const [key, value] = options.set;
-    const config = await configService.load();
-    setNestedValue(config, key, value);
-    await configService.save(config);
-    console.log(chalk.green(`✓ Set ${key} = ${value}`));
-    return;
-  }
-
-  console.log(chalk.yellow('Use --help to see available config commands'));
 }
 
-async function initializeConfig(configService: ConfigService) {
+async function showConfig(profileManager: ProfileManager) {
+  const config = await profileManager.getActiveConfig();
+  const activeProfileName = await profileManager.getActiveProfile();
+  
+  console.log(chalk.bold('\nCurrent Configuration:\n'));
+  console.log(chalk.gray(`Active Profile: ${activeProfileName || 'default'}\n`));
+  console.log(JSON.stringify(config, null, 2));
+}
+
+async function getConfigValue(profileManager: ProfileManager, key: string) {
+  const config = await profileManager.getActiveConfig();
+  const value = getNestedValue(config, key);
+  if (value !== undefined) {
+    console.log(chalk.green(`${key}:`), value);
+  } else {
+    console.log(chalk.red(`Configuration key not found: ${key}`));
+  }
+}
+
+async function setConfigValue(profileManager: ProfileManager, key: string, value: string) {
+  const activeProfileName = await profileManager.getActiveProfile();
+  if (!activeProfileName) {
+    console.log(chalk.red('No active profile found. Please create a profile first.'));
+    return;
+  }
+  
+  const activeProfile = await profileManager.getProfile(activeProfileName);
+  if (!activeProfile) {
+    console.log(chalk.red('Active profile not found. Please create a profile first.'));
+    return;
+  }
+  
+  setNestedValue(activeProfile.config, key, value);
+  await profileManager.updateProfile(activeProfileName, { config: activeProfile.config });
+  console.log(chalk.green(`✓ Set ${key} = ${value} in profile '${activeProfile.name}'`));
+}
+
+async function editConfig(profileManager: ProfileManager) {
+  console.log(chalk.bold('\n🔧 Edit Configuration\n'));
+  
+  const activeProfileName = await profileManager.getActiveProfile();
+  if (!activeProfileName) {
+    console.log(chalk.red('No active profile found. Please create a profile first.'));
+    return;
+  }
+  
+  const activeProfile = await profileManager.getProfile(activeProfileName);
+  if (!activeProfile) {
+    console.log(chalk.red('Active profile not found. Please create a profile first.'));
+    return;
+  }
+  
+  const config = activeProfile.config;
+  
+  const answers = await inquirer.prompt([
+    {
+      type: 'input',
+      name: 'vaultPath',
+      message: 'Obsidian vault path:',
+      default: config.vault.path,
+      validate: (input: string) => input.length > 0 || 'Vault path is required',
+    },
+    {
+      type: 'input',
+      name: 'originalsPath',
+      message: 'Original files organization path:',
+      default: config.originals.path,
+    },
+    {
+      type: 'list',
+      name: 'organizationStyle',
+      message: 'How should original files be organized?',
+      default: config.originals.organizationStyle,
+      choices: [
+        { name: 'By file type', value: 'type-based' },
+        { name: 'By project/context', value: 'project-based' },
+        { name: 'By date', value: 'date-based' },
+      ],
+    },
+    {
+      type: 'list',
+      name: 'mode',
+      message: 'Default processing mode:',
+      default: config.api.mode,
+      choices: [
+        { name: 'Claude Code (no API key needed)', value: 'claude-code' },
+        { name: 'Claude API (requires API key)', value: 'api' },
+        { name: 'Hybrid (API with local fallback)', value: 'hybrid' },
+        { name: 'Local only (no AI)', value: 'local' },
+      ],
+    },
+  ]);
+
+  // Update config with new values
+  config.vault.path = answers.vaultPath;
+  config.originals.path = answers.originalsPath;
+  config.originals.organizationStyle = answers.organizationStyle;
+  config.api.mode = answers.mode;
+
+  await profileManager.updateProfile(activeProfileName, { config });
+  console.log(chalk.green(`\n✓ Profile '${activeProfile.name}' updated successfully!`));
+}
+
+async function initializeConfig(profileManager: ProfileManager) {
   console.log(chalk.bold('\n🎯 Polish Configuration Setup\n'));
 
   const answers = await inquirer.prompt([
@@ -152,8 +260,12 @@ async function initializeConfig(configService: ConfigService) {
     },
   };
 
-  await configService.save(config);
+  const profileName = 'default';
+  await profileManager.createProfile(profileName, config, 'Default configuration profile');
+  await profileManager.setActiveProfile(profileName);
+  
   console.log(chalk.green('\n✓ Configuration saved successfully!'));
+  console.log(chalk.gray('Created profile:'), chalk.cyan(profileName));
   console.log(chalk.gray('You can now run'), chalk.cyan('polish organize'), chalk.gray('to start organizing files'));
 }
 

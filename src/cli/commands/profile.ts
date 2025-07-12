@@ -47,9 +47,21 @@ export async function profileCommand(action: string, name?: string, options: Pro
     case 'init':
       await initializeProfile(profileManager, name, options);
       break;
+    case 'add-source':
+      await addSourceDirectory(profileManager, name);
+      break;
+    case 'remove-source':
+      await removeSourceDirectory(profileManager, name);
+      break;
+    case 'list-sources':
+      await listSourceDirectories(profileManager);
+      break;
     default:
       console.log(chalk.yellow(`Unknown profile action: ${action}`));
-      console.log(chalk.gray('Available actions: create, list, switch, delete, current, clone, rename, export, import, init'));
+      console.log(chalk.gray('Available actions:'));
+      console.log(chalk.gray('  Profile management: create, list, switch, delete, current, clone, rename'));
+      console.log(chalk.gray('  Import/Export: export, import, init'));
+      console.log(chalk.gray('  Source directories: add-source, remove-source, list-sources'));
   }
 }
 
@@ -457,6 +469,139 @@ async function initializeProfile(profileManager: ProfileManager, name: string | 
 
   // Initialize with default profile
   await createProfile(profileManager, name || 'default', options);
+}
+
+async function addSourceDirectory(profileManager: ProfileManager, sourcePath: string | undefined) {
+  const activeProfileName = await profileManager.getActiveProfile();
+  if (!activeProfileName) {
+    console.log(chalk.red('No active profile found. Please create a profile first.'));
+    return;
+  }
+
+  const activeProfile = await profileManager.getProfile(activeProfileName);
+  if (!activeProfile) {
+    console.log(chalk.red('Active profile not found.'));
+    return;
+  }
+
+  let newSourcePath = sourcePath;
+  if (!newSourcePath) {
+    const answer = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'path',
+        message: 'Enter source directory path:',
+        validate: (input: string) => {
+          if (!input.trim()) return 'Path is required';
+          if (!path.isAbsolute(input)) return 'Path must be absolute';
+          return true;
+        },
+      },
+    ]);
+    newSourcePath = answer.path;
+  }
+
+  // Check if source already exists
+  const exists = activeProfile.config.sources.some(source => source.path === newSourcePath);
+  if (exists) {
+    console.log(chalk.yellow(`Source directory '${newSourcePath}' is already tracked.`));
+    return;
+  }
+
+  // Add new source
+  activeProfile.config.sources.push({
+    path: newSourcePath!,
+    includeSubfolders: false,
+  });
+
+  try {
+    await profileManager.updateProfile(activeProfileName, { config: activeProfile.config });
+    console.log(chalk.green(`✓ Added source directory: ${newSourcePath}`));
+  } catch (error) {
+    console.error(chalk.red('Failed to add source directory:'), error instanceof Error ? error.message : error);
+  }
+}
+
+async function removeSourceDirectory(profileManager: ProfileManager, sourcePath: string | undefined) {
+  const activeProfileName = await profileManager.getActiveProfile();
+  if (!activeProfileName) {
+    console.log(chalk.red('No active profile found. Please create a profile first.'));
+    return;
+  }
+
+  const activeProfile = await profileManager.getProfile(activeProfileName);
+  if (!activeProfile) {
+    console.log(chalk.red('Active profile not found.'));
+    return;
+  }
+
+  let targetPath = sourcePath;
+  if (!targetPath) {
+    if (activeProfile.config.sources.length === 0) {
+      console.log(chalk.yellow('No source directories configured.'));
+      return;
+    }
+
+    const answer = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'path',
+        message: 'Select source directory to remove:',
+        choices: activeProfile.config.sources.map(source => ({
+          name: source.path,
+          value: source.path,
+        })),
+      },
+    ]);
+    targetPath = answer.path;
+  }
+
+  // Remove source
+  const originalLength = activeProfile.config.sources.length;
+  activeProfile.config.sources = activeProfile.config.sources.filter(source => source.path !== targetPath);
+
+  if (activeProfile.config.sources.length === originalLength) {
+    console.log(chalk.yellow(`Source directory '${targetPath}' not found.`));
+    return;
+  }
+
+  try {
+    await profileManager.updateProfile(activeProfileName, { config: activeProfile.config });
+    console.log(chalk.green(`✓ Removed source directory: ${targetPath}`));
+  } catch (error) {
+    console.error(chalk.red('Failed to remove source directory:'), error instanceof Error ? error.message : error);
+  }
+}
+
+async function listSourceDirectories(profileManager: ProfileManager) {
+  const activeProfileName = await profileManager.getActiveProfile();
+  if (!activeProfileName) {
+    console.log(chalk.red('No active profile found. Please create a profile first.'));
+    return;
+  }
+
+  const activeProfile = await profileManager.getProfile(activeProfileName);
+  if (!activeProfile) {
+    console.log(chalk.red('Active profile not found.'));
+    return;
+  }
+
+  console.log(chalk.bold(`\nSource Directories for '${activeProfile.name}':\n`));
+
+  if (activeProfile.config.sources.length === 0) {
+    console.log(chalk.gray('No source directories configured.'));
+    console.log(chalk.gray('Use'), chalk.cyan('polish profile add-source'), chalk.gray('to add directories.'));
+    return;
+  }
+
+  activeProfile.config.sources.forEach((source, index) => {
+    console.log(chalk.cyan(`${index + 1}.`), source.path);
+    if (source.includeSubfolders) {
+      console.log(chalk.gray('   └─ Includes subfolders'));
+    }
+  });
+
+  console.log(chalk.gray(`\nTotal: ${activeProfile.config.sources.length} source director${activeProfile.config.sources.length === 1 ? 'y' : 'ies'}`));
 }
 
 function formatTimeAgo(date: Date): string {
